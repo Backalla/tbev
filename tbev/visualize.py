@@ -8,14 +8,9 @@ import urllib.request
 
 LOGDIR = "/tmp/logs/"
 
-def download_demo_embeddings():
-    print("Downloading demo embeddings")
-    urllib.request.urlretrieve ("https://transfer.sh/KFdR5/demo_word2vec_embeddings_zen.pkl", "./demo_word2vec_embeddings_zen.pkl")
+
 
 def main():
-
-    if not os.path.exists("./demo_word2vec_embeddings_zen.pkl"):
-        download_demo_embeddings()
     embeddings_dict = pickle.load(open("./demo_word2vec_embeddings_zen.pkl","rb"))
     embedding_variable = tf.Variable(embeddings_dict['embedding'], name="embeddings")
 
