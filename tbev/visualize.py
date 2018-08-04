@@ -3,11 +3,20 @@ import tensorflow as tf
 from tensorboard import main as tb
 from tensorflow.contrib.tensorboard.plugins import projector
 import os
+import urllib.request
+
 
 LOGDIR = "/tmp/logs/"
 
+def download_demo_embeddings():
+    print("Downloading demo embeddings")
+    urllib.request.urlretrieve ("https://transfer.sh/KFdR5/demo_word2vec_embeddings_zen.pkl", "./demo_word2vec_embeddings_zen.pkl")
+
 def main():
-    embeddings_dict = pickle.load(open("demo_word2vec_embeddings_zen.pkl","rb"))
+
+    if not os.path.exists("./demo_word2vec_embeddings_zen.pkl"):
+        download_demo_embeddings()
+    embeddings_dict = pickle.load(open("./demo_word2vec_embeddings_zen.pkl","rb"))
     embedding_variable = tf.Variable(embeddings_dict['embedding'], name="embeddings")
 
     summary_writer = tf.summary.FileWriter(LOGDIR)
