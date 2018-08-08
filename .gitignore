@@ -3,3 +3,4 @@ dist/
 push_pypi.sh
 tbev.egg-info/
 __pycache__/
+logs/

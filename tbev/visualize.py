@@ -18,6 +18,7 @@ from tensorflow.contrib.tensorboard.plugins import projector
 import os
 from docopt import docopt
 import urllib.request
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 
 
 args = docopt(__doc__)
@@ -54,7 +55,8 @@ def generate_embeddings_from_pickle(pickle_path, logdir):
         # print(labels_values)
 
         with open(os.path.join(logdir,embedding.metadata_path), 'w') as handle:
-            handle.write("{}\n".format("\t".join(labels_types)))
+            if len(labels_types) > 1:
+                handle.write("{}\n".format("\t".join(labels_types)))
             for label_value in labels_values:
                 handle.write('{}\n'.format("\t".join(label_value)))
     
