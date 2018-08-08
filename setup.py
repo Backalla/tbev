@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="tbev",
-    version="0.0.7",
+    version="0.0.8",
     author="Tushar Pawar",
     author_email="gmail@tusharpawar.com",
     description="Embedding Visualizer Using Tensorboard",
