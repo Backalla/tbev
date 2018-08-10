@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="tbev",
-    version="0.1.0",
+    version="0.1.1",
     author="Tushar Pawar",
     author_email="gmail@tusharpawar.com",
     description="Embedding Visualizer Using Tensorboard",
@@ -15,7 +15,6 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     install_requires=[
         'colorama',
-        'pickle',
         'docopt'
     ],
     classifiers=(
