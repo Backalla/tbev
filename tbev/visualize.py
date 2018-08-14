@@ -159,7 +159,7 @@ def generate_embeddings_from_pickle(pickle_path, logdir):
 
 def main():
     if args["demo"]:
-        generate_embeddings_from_pickle("./demo_word2vec_embeddings_zen.pkl","./logs/")
+        generate_embeddings_from_pickle(os.path.join(os.path.dirname(__file__),"./demo_word2vec_embeddings_zen.pkl"),"./logs/")
     else:
         generate_embeddings_from_pickle(args["<pickle_file>"],args["--logdir"])
 
