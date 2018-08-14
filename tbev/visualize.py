@@ -54,19 +54,25 @@ import math
 import urllib.request
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 
+def get_static_file_path(filename):
+    return os.path.join(os.path.dirname(__file__),filename)
+
 
 def create_sprites(image_paths,sprite_path,sprite_size):
     num_images = len(image_paths)
-    print(num_images)
+    # print(num_images)
     sprite_num_rows = math.ceil(math.sqrt(num_images))
     sprite_height, sprite_width = sprite_size
     sprite_image_obj = np.ones(shape=((sprite_num_rows)*sprite_height,(sprite_num_rows)*sprite_width,3),dtype=np.uint8)*255
     for i,image_path in enumerate(image_paths):
+        if not os.path.exists(image_path):
+            image_path = get_static_file_path("not_found.png")
         try:
             image_obj = cv2.imread(image_path)
             image_obj = cv2.resize(image_obj, (sprite_height,sprite_width))
         except:
-            image_obj = np.ones(shape=(sprite_height,sprite_width,3),dtype=np.uint8)*255
+            image_obj = cv2.imread(get_static_file_path("invalid.png"))
+            image_obj = cv2.resize(image_obj, (sprite_height,sprite_width))
         x = (i%sprite_num_rows)*sprite_width
         y = (i//sprite_num_rows)*sprite_height
         sprite_image_obj[y:y+sprite_height,x:x+sprite_width] = image_obj
@@ -159,7 +165,7 @@ def generate_embeddings_from_pickle(pickle_path, logdir):
 
 def main():
     if args["demo"]:
-        generate_embeddings_from_pickle(os.path.join(os.path.dirname(__file__),"./demo_word2vec_embeddings_zen.pkl"),"./logs/")
+        generate_embeddings_from_pickle(get_static_file_path("./demo_word2vec_embeddings_zen.pkl"),"./logs/")
     else:
         generate_embeddings_from_pickle(args["<pickle_file>"],args["--logdir"])
 

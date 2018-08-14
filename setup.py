@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="tbev",
-    version="0.1.1",
+    version="0.1.2",
     author="Tushar Pawar",
     author_email="gmail@tusharpawar.com",
     description="Embedding Visualizer Using Tensorboard",
@@ -27,6 +27,6 @@ setuptools.setup(
         ],
     },
     package_data={
-        "tbev": ['demo_word2vec_embeddings_zen.pkl']
+        "tbev": ['demo_word2vec_embeddings_zen.pkl','invalid.png','not_found.png']
     }
 )
