@@ -22,6 +22,9 @@ init()
 def print_info(s):
     print(Fore.GREEN+"[INFO] "+Style.RESET_ALL+s)
 
+def print_warning(s):
+    print(Fore.YELLOW+"[WARNING] "+Style.RESET_ALL+s)
+
 def print_error(s, terminate=False):
     print(Fore.RED+"[ERROR] "+Style.RESET_ALL+s)
     if terminate:
@@ -34,13 +37,41 @@ try:
 except ImportError:
     print_error("Could not import tensorflow. Make sure it is installed", True)
 
+try:
+    import cv2
+except ImportError:
+    print_error("Could not import Opencv (cv2). Make sure it is installed", True)
+
+try:
+    import numpy as np
+except ImportError:
+    print_error("Could not import Numpy. Make sure it is installed", True)
 
 from tensorboard import main as tb
 from tensorflow.contrib.tensorboard.plugins import projector
 import os
+import math
 import urllib.request
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 
+
+def create_sprites(image_paths,sprite_path,sprite_size):
+    num_images = len(image_paths)
+    print(num_images)
+    sprite_num_rows = math.ceil(math.sqrt(num_images))
+    sprite_height, sprite_width = sprite_size
+    sprite_image_obj = np.ones(shape=((sprite_num_rows)*sprite_height,(sprite_num_rows)*sprite_width,3),dtype=np.uint8)*255
+    for i,image_path in enumerate(image_paths):
+        try:
+            image_obj = cv2.imread(image_path)
+            image_obj = cv2.resize(image_obj, (sprite_height,sprite_width))
+        except:
+            image_obj = np.ones(shape=(sprite_height,sprite_width,3),dtype=np.uint8)*255
+        x = (i%sprite_num_rows)*sprite_width
+        y = (i//sprite_num_rows)*sprite_height
+        sprite_image_obj[y:y+sprite_height,x:x+sprite_width] = image_obj
+        
+    cv2.imwrite(sprite_path,sprite_image_obj)
 
 
 def verify_embeddings_dict(embeddings_dict):
@@ -55,6 +86,15 @@ def verify_embeddings_dict(embeddings_dict):
         print_error("Labels not found in pickle file", True)
     
     num_samples = len(embddings)
+
+    if "sprite_paths" in embeddings_dict:
+        sprite_paths_len = len(embeddings_dict["sprite_paths"])
+        if sprite_paths_len != num_samples:
+            print_error("Number of sprite paths is not equal to number of embeddings: {} != {}".format(sprite_paths_len,
+                                                                                                       num_samples))
+        for sprite_path in embeddings_dict["sprite_paths"]:
+            if not os.path.exists(sprite_path):
+                print_warning("Sprite image path {} not found".format(sprite_path))
 
     for label in labels:
         if len(labels[label]) != num_samples:
@@ -78,8 +118,12 @@ def generate_embeddings_from_pickle(pickle_path, logdir):
     embedding = config.embeddings.add()
     embedding.tensor_name = embedding_variable.name
     embedding.metadata_path = 'metadata.tsv'
-    # embedding.sprite.image_path = 'sprite.png'
-    # embedding.sprite.single_image_dim.extend(dimensions)
+    if "sprite_paths" in embeddings_dict:
+        sprite_path = os.path.join(logdir,"sprites.png")
+        sprite_size = [100,100]
+        create_sprites(embeddings_dict["sprite_paths"],sprite_path,sprite_size)
+        embedding.sprite.image_path = "sprites.png"
+        embedding.sprite.single_image_dim.extend(sprite_size)
     projector.visualize_embeddings(summary_writer, config)
 
     print_info("Creating embeddings checkpoint")
