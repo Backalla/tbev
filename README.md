@@ -1,6 +1,6 @@
 # TensorBoard Embedding Visualizer
 
-![DEMO](https://media.giphy.com/media/3GlcRfKZNCufhpznp2/giphy.gif)
+![DEMO](https://github.com/Backalla/tbev/blob/master/media/tbev.gif)
 
 As the name suggests, this tool is made for visualizing high dimensional embeddings into 3D space using TensorBoard Projector tool. It performs PCA and also has an option for T-SNE for doing dimensionality reduction. All you have to do is provide you embeddings data and its corresponding labels and optionally images(paths) in pickle format as a dictionary. The structure of this dictionary is explained below. 
 
