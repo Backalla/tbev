@@ -158,9 +158,6 @@ def generate_embeddings_from_pickle(pickle_path, logdir):
                 handle.write('{}\n'.format("\t".join(label_value)))
     
     print_info("Logs created at {}".format(os.path.abspath(logdir)))
-    tf.flags.FLAGS.logdir = logdir
-    print_info("Starting Tensorboard")
-    tb.main()
 
 
 def main():
